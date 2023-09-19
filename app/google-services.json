@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "142381945674",
+    "project_id": "coding-made-fun",
+    "storage_bucket": "coding-made-fun.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142381945674:android:1eeadc5401005ba532a7b3",
+        "android_client_info": {
+          "package_name": "com.example.coding_made_fun"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDt7ziICMgIo5xqdD0f3LEoBteJA9YApiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
