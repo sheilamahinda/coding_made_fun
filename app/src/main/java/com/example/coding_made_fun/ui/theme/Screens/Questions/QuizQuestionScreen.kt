@@ -1,13 +1,9 @@
 package com.example.coding_made_fun.ui.theme.Screens.Questions
 
-import android.app.VoiceInteractor.PickOptionRequest.Option
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
@@ -18,31 +14,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.coding_made_fun.data.Apiviewmodel
 import com.example.coding_made_fun.data.QuizViewModel
+import com.example.coding_made_fun.model.Question
 import com.example.coding_made_fun.navigation.ROUTE_HOME
-import com.example.coding_made_fun.navigation.ROUTE_RESULTS
-import com.example.coding_made_fun.ui.theme.Screens.Result.ResultsPage
+import com.example.coding_made_fun.navigation.ROUTE_QUESTIONS
 
 
 @Composable
 fun QuizApp(navController: NavHostController){
-    val navController = rememberNavController()
     val viewModel: QuizViewModel = viewModel()
-    val currentQuestion = viewModel.getCurrentQuestion()
+    val currentQuestion: Question = viewModel.getCurrentQuestion()
     var selectedOptionIndex by remember { mutableStateOf(-1)
 
     }
     // Check if the quiz is finished
-    if (viewModel.isQuizFinished()) {
+//    if (viewModel.isQuizFinished()) {
         // Navigate back to the home screen
-        navController.navigate("ResultsPage")
-    }
+//        navController.navigate("ResultsPage")
+//    }
 
     val options = listOf(
         Option("London", isCorrect = false),
@@ -54,12 +45,14 @@ fun QuizApp(navController: NavHostController){
 
 
 
+
     Column(
 
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+
         Text(
             text = "Question ${currentQuestion.id}",
             modifier = Modifier.padding(bottom = 16.dp)
@@ -75,11 +68,10 @@ fun QuizApp(navController: NavHostController){
             QuizOption(
                 option = option,
                 isSelected = index == selectedOptionIndex,
-                isCorrect = option == currentQuestion.options[currentQuestion.correctAnswer],
-                onOptionSelected = {
-                    selectedOptionIndex = index
-                }
-            )
+                isCorrect = option == currentQuestion.options[currentQuestion.correctAnswer]
+            ) {
+                selectedOptionIndex = index
+            }
         }
 
 
@@ -101,7 +93,7 @@ fun QuizApp(navController: NavHostController){
                 } else {selectedOptionIndex != -1
                     // Handle quiz completion (e.g., show a score)
                     (viewModel.isQuizFinished())
-                        navController.navigate(ROUTE_HOME)
+                        navController.popBackStack(ROUTE_QUESTIONS, inclusive = true)
 
 
                 }
@@ -139,19 +131,15 @@ fun QuizApp(navController: NavHostController){
 
 
 
+
 @Composable
 fun QuizOption(
     option: String,
     isSelected: Boolean,
-
+    isCorrect: Boolean,
     onOptionSelected: () -> Unit
 ) {
     val backgroundColor = if (isSelected) Color.Gray else Color.White
-    var onOptionSelected by remember { mutableStateOf<Option?>(null) }
-    var isCorrect by remember { mutableStateOf(false)
-    }
-
-
 
     Row(
         modifier = Modifier
@@ -164,8 +152,7 @@ fun QuizOption(
     ) {
         RadioButton(
             selected = isSelected,
-            onClick = { onOptionSelected()
-               },
+            onClick = { onOptionSelected() },
             colors = RadioButtonDefaults.colors(
                 selectedColor = if (isSelected) {
                     if (isCorrect) Color.Green else Color.Red
@@ -177,20 +164,17 @@ fun QuizOption(
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Text(
-            text = option
-
-        )
+        Text(text = option)
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-
     // Display a message based on whether the selected answer is correct or not
-    if (onOptionSelected != null) {
+    if (isSelected) {
         val message = if (isCorrect) "Correct Answer!" else "Wrong Answer!"
         Text(text = message, color = if (isCorrect) Color.Green else Color.Red)
     }
 }
+
 data class Option(val text: String, val isCorrect: Boolean)
 @Preview
 @Composable
